@@ -9,7 +9,7 @@
 
 uint8_t get_byte (std::ifstream &fptr);
 uint16_t get_uint16 (std::ifstream &fptr);
-void set_data_register_to_nn (CPU &cpu, uint16_t input);
+void handle_set_data_register_to_nn_opcode (CPU &cpu, uint16_t input);
 void handle_set_memory_address_register_opcode (CPU &cpu, uint16_t input);
 
 int
@@ -35,7 +35,7 @@ main (void)
       switch (uint8_t (opcode >> 12))
         {
         case 0x6:
-          set_data_register_to_nn (cpu, opcode);
+          handle_set_data_register_to_nn_opcode (cpu, opcode);
           break;
         case 0xA:
           handle_set_memory_address_register_opcode (cpu, opcode);
@@ -66,7 +66,7 @@ get_uint16 (std::ifstream &fptr)
 }
 
 void
-set_data_register_to_nn (CPU &cpu, uint16_t input)
+handle_set_data_register_to_nn_opcode (CPU &cpu, uint16_t input)
 {
   CPU::data_register reg = CPU::get_data_register ((input >> 8) & 0xF);
   std::cout << std::format ("Register {} before: {:02X}\n",
