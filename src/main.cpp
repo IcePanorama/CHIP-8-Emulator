@@ -14,6 +14,7 @@ void handle_set_data_register_to_nn_opcode (CPU &cpu, uint16_t input);
 void handle_set_memory_address_register_opcode (CPU &cpu, uint16_t input);
 void handle_get_key_opcode (CPU &cpu, uint16_t input);
 void handle_clear_display_opcode (void);
+void handle_sound_timer_opcode (CPU &cpu, uint16_t input);
 
 int
 main (void)
@@ -43,8 +44,7 @@ main (void)
               handle_clear_display_opcode ();
               break;
             }
-          std::cout << std::format ("Unknown opcode: {:04X}\n", opcode);
-          break;
+          [[fallthrough]];
         case 0x6:
           handle_set_data_register_to_nn_opcode (cpu, opcode);
           break;
@@ -55,6 +55,11 @@ main (void)
           if ((opcode & 0xFF) == 0x0A)
             {
               handle_get_key_opcode (cpu, opcode);
+              break;
+            }
+          else if ((opcode & 0xFF) == 0x18)
+            {
+              handle_sound_timer_opcode (cpu, opcode);
               break;
             }
           [[fallthrough]];
@@ -136,4 +141,13 @@ void
 handle_clear_display_opcode (void)
 {
   std::cout << "Clearing the screen...\n";
+}
+
+void
+handle_sound_timer_opcode (CPU &cpu, uint16_t input)
+{
+  CPU::data_register reg = CPU::get_data_register ((input >> 8) & 0xF);
+  std::cout << std::format ("Sound timer before: {:02X}\n", cpu.sound_timer);
+  cpu.sound_timer = cpu.registers[reg];
+  std::cout << std::format ("Sound timer after: {:02X}\n", cpu.sound_timer);
 }
