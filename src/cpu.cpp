@@ -50,3 +50,9 @@ CPU::set_memory_address_register (uint16_t addr)
 {
   memory_address_register = addr & 0xFFF;
 }
+
+uint16_t
+CPU::get_memory_address_register (void)
+{
+  return memory_address_register;
+}

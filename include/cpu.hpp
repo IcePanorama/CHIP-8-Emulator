@@ -30,6 +30,7 @@ public:
 	
 	static data_register get_data_register (uint8_t x);
 	void set_memory_address_register (uint16_t addr);
+	uint16_t get_memory_address_register (void);
 };
 
 #endif

@@ -3,7 +3,6 @@
 #include <cassert>
 #include <cstdint>
 #include <cstdio>
-#include <exception>
 #include <format>
 #include <fstream>
 #include <iostream>
@@ -11,6 +10,7 @@
 uint8_t get_byte (std::ifstream &fptr);
 uint16_t get_uint16 (std::ifstream &fptr);
 void set_data_register_to_nn (CPU &cpu, uint16_t input);
+void handle_set_memory_address_register_opcode (CPU &cpu, uint16_t input);
 
 int
 main (void)
@@ -34,8 +34,11 @@ main (void)
 
       switch (uint8_t (opcode >> 12))
         {
-        case 6:
+        case 0x6:
           set_data_register_to_nn (cpu, opcode);
+          break;
+        case 0xA:
+          handle_set_memory_address_register_opcode (cpu, opcode);
           break;
         default:
           std::cout << std::format ("Unknown opcode: {:04X}\n", opcode);
@@ -72,4 +75,14 @@ set_data_register_to_nn (CPU &cpu, uint16_t input)
   cpu.registers[reg] = input & 0xFF;
   std::cout << std::format ("Register {} after: {:02X}\n",
                             static_cast<int> (reg), cpu.registers[reg]);
+}
+
+void
+handle_set_memory_address_register_opcode (CPU &cpu, uint16_t input)
+{
+  std::cout << std::format ("Before: {:03X}\n",
+                            cpu.get_memory_address_register ());
+  cpu.set_memory_address_register (input & 0xFFF);
+  std::cout << std::format ("After: {:03X}\n",
+                            cpu.get_memory_address_register ());
 }
