@@ -25,7 +25,7 @@ public:
 	} data_register;
 	
 	// 8-bit data registers, V0 to VF.
-	uint8_t registers[16] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
+	uint8_t registers[16] = {0};
 	
 	static data_register get_data_register (uint8_t x);
 };
