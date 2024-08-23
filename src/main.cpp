@@ -3,12 +3,14 @@
 #include <cassert>
 #include <cstdint>
 #include <cstdio>
+#include <exception>
 #include <format>
 #include <fstream>
 #include <iostream>
 
 uint8_t get_byte (std::ifstream &fptr);
 uint16_t get_uint16 (std::ifstream &fptr);
+void set_data_register_to_nn (CPU &cpu, uint16_t input);
 
 int
 main (void)
@@ -20,19 +22,25 @@ main (void)
       std::cerr << "Error opening file: " << FILENAME << std::endl;
       return -1;
     }
-
-  uint16_t opcode = get_uint16 (file);
-
   CPU cpu;
 
-  std::cout << std::format ("Opcode: {:04X}\n", opcode);
-  assert (uint8_t (opcode >> 12) == 6);
+  while (!file.eof ())
+    {
+      uint16_t opcode = get_uint16 (file);
+      if (file.eof ())
+        break;
 
-  CPU::data_register reg = CPU::get_data_register ((opcode >> 8) % 0xF);
-  std::cout << std::format ("Before: {:02X}\n", cpu.registers[reg]);
+      std::cout << std::format ("Opcode: {:04X}\n", opcode);
 
-  cpu.registers[reg] = opcode & 0xFF;
-  std::cout << std::format ("After: {:02X}\n", cpu.registers[reg]);
+      switch (uint8_t (opcode >> 12))
+        {
+        case 6:
+          set_data_register_to_nn (cpu, opcode);
+          break;
+        default:
+          std::cout << std::format ("Unknown opcode: {:04X}\n", opcode);
+        }
+    }
 
   return 0;
 }
@@ -42,7 +50,6 @@ get_byte (std::ifstream &fptr)
 {
   char byte;
   fptr.read (&byte, sizeof (byte));
-  assert (fptr);
 
   return static_cast<uint8_t> (byte);
 }
@@ -53,4 +60,16 @@ get_uint16 (std::ifstream &fptr)
   uint8_t low_byte = get_byte (fptr);
   uint8_t high_byte = get_byte (fptr);
   return (static_cast<uint16_t> (low_byte) << 8) | high_byte;
+}
+
+void
+set_data_register_to_nn (CPU &cpu, uint16_t input)
+{
+  CPU::data_register reg = CPU::get_data_register ((input >> 8) & 0xF);
+  std::cout << std::format ("Register {} before: {:02X}\n",
+                            static_cast<int> (reg), cpu.registers[reg]);
+
+  cpu.registers[reg] = input & 0xFF;
+  std::cout << std::format ("Register {} after: {:02X}\n",
+                            static_cast<int> (reg), cpu.registers[reg]);
 }
