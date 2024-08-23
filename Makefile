@@ -36,5 +36,6 @@ test: $(TARGET)
 	valgrind --leak-check=yes ./$(TARGET)
 
 clean:
+	-@rm vgcore.* 2>/dev/null || true
 	-@rm $(SRC)/*.o 2>/dev/null || true
 	-@rm $(TARGET) 2>/dev/null || true
