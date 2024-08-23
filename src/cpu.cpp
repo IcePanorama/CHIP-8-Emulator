@@ -1,5 +1,7 @@
 #include "cpu.hpp"
 
+#include <format>
+#include <iostream>
 #include <stdexcept>
 #include <string>
 
@@ -49,4 +51,16 @@ void
 CPU::set_memory_address_register (uint16_t addr)
 {
   memory_address_register = addr & 0xFFF;
+}
+
+void
+CPU::set_data_register_to_nn (uint16_t input)
+{
+  CPU::data_register reg = CPU::get_data_register ((input >> 8) & 0xF);
+  std::cout << std::format ("Register {} before: {:02X}\n",
+                            static_cast<int> (reg), registers[reg]);
+
+  registers[reg] = input & 0xFF;
+  std::cout << std::format ("Register {} after: {:02X}\n",
+                            static_cast<int> (reg), registers[reg]);
 }

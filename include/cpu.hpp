@@ -5,6 +5,7 @@
 
 class CPU {
 	// 12-bit register, using uint16_t for simplicity.
+	// set_memory_address_register() insures that the value is 12-bit.
 	uint16_t memory_address_register = 0;
 public:
 	typedef enum data_register {
@@ -29,6 +30,7 @@ public:
 	uint8_t registers[16] = {0};	// 8-bit data registers, V0 to VF.
 	
 	static data_register get_data_register (uint8_t x);
+	void set_data_register_to_nn (uint16_t input);
 	void set_memory_address_register (uint16_t addr);
 };
 
