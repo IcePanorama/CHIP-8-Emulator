@@ -27,9 +27,12 @@ main (void)
   assert (uint8_t (byte_value / 16) == 6);
 
   CPU::data_register reg = CPU::get_data_register (byte_value % 16);
-  std::cout << std::format ("{}\n", static_cast<int> (reg));
-  std::cout << std::format (
-      "{}\n", cpu.registers[CPU::get_data_register (byte_value % 16)]);
+  std::cout << std::format ("Before: {:02X}\n", cpu.registers[reg]);
+
+  byte_value = get_byte (file);
+  cpu.registers[reg] = byte_value;
+
+  std::cout << std::format ("After: {:02X}\n", cpu.registers[reg]);
 
   return 0;
 }
