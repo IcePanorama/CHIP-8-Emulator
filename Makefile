@@ -16,16 +16,18 @@ SRC_FILES = $(wildcard $(SRC)/*.cpp)
 INCL_FILES = $(wildcard $(INCL)/*.h)
 OBJ_FILES = $(SRC_FILES:$(SRC)/%.c=$(SRC)/%.o)
 
+LIBS =
+
 TARGET = emulator
 
 all: clean format $(TARGET)
 full: all test
 
 $(SRC)/%.o: $(SRC)/%.c
-	$(CC) $(CFLAGS) -c $< -o $@ -I./$(INCL_DIR)/
+	$(CC) $(CFLAGS) -c $< -o $@ -I./$(INCL_DIR)/ $(LIBS)
 
 $(TARGET): $(OBJ_FILES)
-	$(CC) $(CFLAGS) -o $(TARGET) $(OBJ_FILES) -I./$(INCL)/
+	$(CC) $(CFLAGS) -o $(TARGET) $(OBJ_FILES) -I./$(INCL)/ $(LIBS)
 
 format:
 	$(AUTOFMT) -style=$(STYLE) -i $(SRC_FILES) $(INCL_FILES)

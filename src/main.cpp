@@ -6,11 +6,13 @@
 #include <format>
 #include <fstream>
 #include <iostream>
+#include <stdexcept>
 
 uint8_t get_byte (std::ifstream &fptr);
 uint16_t get_uint16 (std::ifstream &fptr);
 void handle_set_data_register_to_nn_opcode (CPU &cpu, uint16_t input);
 void handle_set_memory_address_register_opcode (CPU &cpu, uint16_t input);
+void handle_get_key_opcode (CPU &cpu, uint16_t input);
 
 int
 main (void)
@@ -40,6 +42,13 @@ main (void)
         case 0xA:
           handle_set_memory_address_register_opcode (cpu, opcode);
           break;
+        case 0xF:
+          if ((opcode & 0xFF) == 0x0A)
+            {
+              handle_get_key_opcode (cpu, opcode);
+              break;
+            }
+          [[fallthrough]];
         default:
           std::cout << std::format ("Unknown opcode: {:04X}\n", opcode);
         }
@@ -85,4 +94,31 @@ handle_set_memory_address_register_opcode (CPU &cpu, uint16_t input)
   cpu.set_memory_address_register (input & 0xFFF);
   std::cout << std::format ("After: {:03X}\n",
                             cpu.get_memory_address_register ());
+}
+
+void
+handle_get_key_opcode (CPU &cpu, uint16_t input)
+{
+  // User must currently press enter for keycode to be registered
+  // This'll be changed when I switch to using raylib or whatever.
+  char c = getchar ();
+  uint8_t keycode = 0;
+
+  if (c >= 'a' && c <= 'f')
+    keycode = c - 'a' + 10;
+  else if (c >= 'A' && c <= 'F')
+    keycode = c - 'A' + 10;
+  else if (c >= '0' && c <= '9')
+    keycode = c - '0';
+  else
+    throw std::runtime_error (std::format ("Invalid key, %c.\n", c));
+
+  std::cout << std::format ("keycode: {}.\n", keycode);
+
+  CPU::data_register reg = CPU::get_data_register ((input >> 8) & 0xF);
+  std::cout << std::format ("Register {} before: {:02X}\n",
+                            static_cast<int> (reg), cpu.registers[reg]);
+  cpu.registers[reg] = keycode;
+  std::cout << std::format ("Register {} after: {:02X}\n",
+                            static_cast<int> (reg), cpu.registers[reg]);
 }
