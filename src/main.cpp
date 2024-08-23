@@ -13,6 +13,7 @@ uint16_t get_uint16 (std::ifstream &fptr);
 void handle_set_data_register_to_nn_opcode (CPU &cpu, uint16_t input);
 void handle_set_memory_address_register_opcode (CPU &cpu, uint16_t input);
 void handle_get_key_opcode (CPU &cpu, uint16_t input);
+void handle_clear_display_opcode (void);
 
 int
 main (void)
@@ -26,7 +27,7 @@ main (void)
     }
   CPU cpu;
 
-  while (!file.eof ())
+  while (true)
     {
       uint16_t opcode = get_uint16 (file);
       if (file.eof ())
@@ -36,6 +37,14 @@ main (void)
 
       switch (uint8_t (opcode >> 12))
         {
+        case 0x0:
+          if (opcode == 0x00E0)
+            {
+              handle_clear_display_opcode ();
+              break;
+            }
+          std::cout << std::format ("Unknown opcode: {:04X}\n", opcode);
+          break;
         case 0x6:
           handle_set_data_register_to_nn_opcode (cpu, opcode);
           break;
@@ -113,7 +122,7 @@ handle_get_key_opcode (CPU &cpu, uint16_t input)
   else
     throw std::runtime_error (std::format ("Invalid key, %c.\n", c));
 
-  std::cout << std::format ("keycode: {}.\n", keycode);
+  std::cout << std::format ("keycode: {:02X}.\n", keycode);
 
   CPU::data_register reg = CPU::get_data_register ((input >> 8) & 0xF);
   std::cout << std::format ("Register {} before: {:02X}\n",
@@ -121,4 +130,10 @@ handle_get_key_opcode (CPU &cpu, uint16_t input)
   cpu.registers[reg] = keycode;
   std::cout << std::format ("Register {} after: {:02X}\n",
                             static_cast<int> (reg), cpu.registers[reg]);
+}
+
+void
+handle_clear_display_opcode (void)
+{
+  std::cout << "Clearing the screen...\n";
 }
