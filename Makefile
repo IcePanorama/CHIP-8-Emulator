@@ -1,10 +1,11 @@
 CC = g++
 
-CSTD = C++20
+CSTD = c++20
 
-CFLAGS = -Wall -Wextra -Wpedantic -Wuninitialized -Wmissing-include-dirs
-CFLAGS += -Wshadow -Wundef -Winvalid-pch -Wzero-as-null-pointer-constant
-CFLAGS += -Wctor-dtor-privacy -Wold-style-cast -Woverloaded-virtual
+CFLAGS = -std=$(CSTD) -Wall -Wextra -Wpedantic -Wuninitialized
+CFLAGS += -Wmissing-include-dirs -Wshadow -Wundef -Winvalid-pch
+CFLAGS += -Wzero-as-null-pointer-constant -Wctor-dtor-privacy -Wold-style-cast
+CFLAGS += -Woverloaded-virtual
 
 AUTOFMT = clang-format
 STYLE = GNU
