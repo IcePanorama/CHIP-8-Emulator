@@ -13,8 +13,8 @@ STYLE = GNU
 SRC = src
 INCL = include
 SRC_FILES = $(wildcard $(SRC)/*.cpp)
-INCL_FILES = $(wildcard $(INCL)/*.h)
-OBJ_FILES = $(SRC_FILES:$(SRC)/%.c=$(SRC)/%.o)
+INCL_FILES = $(wildcard $(INCL)/*.hpp)
+OBJ_FILES = $(SRC_FILES:$(SRC)/%.cpp=$(SRC)/%.o)
 
 LIBS =
 
@@ -23,8 +23,8 @@ TARGET = emulator
 all: clean format $(TARGET)
 full: all test
 
-$(SRC)/%.o: $(SRC)/%.c
-	$(CC) $(CFLAGS) -c $< -o $@ -I./$(INCL_DIR)/ $(LIBS)
+$(SRC)/%.o: $(SRC)/%.cpp
+	$(CC) $(CFLAGS) -c $< -o $@ -I./$(INCL)/ $(LIBS)
 
 $(TARGET): $(OBJ_FILES)
 	$(CC) $(CFLAGS) -o $(TARGET) $(OBJ_FILES) -I./$(INCL)/ $(LIBS)
