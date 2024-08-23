@@ -3,12 +3,14 @@
 #include <cassert>
 #include <cstdint>
 #include <cstdio>
+#include <exception>
 #include <format>
 #include <fstream>
 #include <iostream>
 
 uint8_t get_byte (std::ifstream &fptr);
 uint16_t get_uint16 (std::ifstream &fptr);
+void set_data_register_to_nn (CPU &cpu, uint16_t input);
 
 int
 main (void)
@@ -22,7 +24,7 @@ main (void)
     }
   CPU cpu;
 
-  while (true)
+  while (!file.eof ())
     {
       uint16_t opcode = get_uint16 (file);
       if (file.eof ())
@@ -32,10 +34,8 @@ main (void)
 
       switch (uint8_t (opcode >> 12))
         {
-        case 0x6:
-          cpu.set_data_register_to_nn (opcode);
-          break;
-        case 0xA:
+        case 6:
+          set_data_register_to_nn (cpu, opcode);
           break;
         default:
           std::cout << std::format ("Unknown opcode: {:04X}\n", opcode);
@@ -60,4 +60,16 @@ get_uint16 (std::ifstream &fptr)
   uint8_t low_byte = get_byte (fptr);
   uint8_t high_byte = get_byte (fptr);
   return (static_cast<uint16_t> (low_byte) << 8) | high_byte;
+}
+
+void
+set_data_register_to_nn (CPU &cpu, uint16_t input)
+{
+  CPU::data_register reg = CPU::get_data_register ((input >> 8) & 0xF);
+  std::cout << std::format ("Register {} before: {:02X}\n",
+                            static_cast<int> (reg), cpu.registers[reg]);
+
+  cpu.registers[reg] = input & 0xFF;
+  std::cout << std::format ("Register {} after: {:02X}\n",
+                            static_cast<int> (reg), cpu.registers[reg]);
 }
