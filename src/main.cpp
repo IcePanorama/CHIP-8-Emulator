@@ -1,5 +1,7 @@
 #include "cpu.hpp"
+#include "sprite.hpp"
 
+#include <array>
 #include <cassert>
 #include <cstdint>
 #include <cstdio>
@@ -8,6 +10,8 @@
 #include <iostream>
 #include <stdexcept>
 
+std::array<Sprite, 16> global_sprites;
+
 uint8_t get_byte (std::ifstream &fptr);
 uint16_t get_uint16 (std::ifstream &fptr);
 void handle_set_data_register_to_nn_opcode (CPU &cpu, uint16_t input);
@@ -15,6 +19,7 @@ void handle_set_address_register_opcode (CPU &cpu, uint16_t input);
 void handle_get_key_opcode (CPU &cpu, uint16_t input);
 void handle_clear_display_opcode (void);
 void handle_sound_timer_opcode (CPU &cpu, uint16_t input);
+void init_global_sprites (void);
 
 int
 main (void)
@@ -152,4 +157,30 @@ handle_sound_timer_opcode (CPU &cpu, uint16_t input)
   std::cout << std::format ("Sound timer before: {:02X}\n", cpu.sound_timer);
   cpu.sound_timer = cpu.registers[reg];
   std::cout << std::format ("Sound timer after: {:02X}\n", cpu.sound_timer);
+}
+
+/* See: http://devernay.free.fr/hacks/chip8/C8TECH10.HTM */
+void
+init_global_sprites (void)
+{
+  /* clang-format off */
+  global_sprites = {{
+    Sprite ('0', 0x0 + 5 * 0, { 0xF0, 0x90, 0x90, 0x90, 0xF0 }),
+    Sprite ('1', 0x0 + 5 * 1, { 0x20, 0x60, 0x20, 0x20, 0x70 }),
+    Sprite ('2', 0x0 + 5 * 2, { 0xF0, 0x10, 0xF0, 0x80, 0xF0 }),
+    Sprite ('3', 0x0 + 5 * 3, { 0xF0, 0x10, 0xF0, 0x10, 0xF0 }),
+    Sprite ('4', 0x0 + 5 * 4, { 0x90, 0x90, 0xF0, 0x10, 0x10 }),
+    Sprite ('5', 0x0 + 5 * 5, { 0xF0, 0x80, 0xF0, 0x10, 0xF0 }),
+    Sprite ('6', 0x0 + 5 * 6, { 0xF0, 0x80, 0xF0, 0x90, 0xF0 }),
+    Sprite ('7', 0x0 + 5 * 7, { 0xF0, 0x10, 0x20, 0x40, 0x40 }),
+    Sprite ('8', 0x0 + 5 * 8, { 0xF0, 0x90, 0xF0, 0x90, 0xF0 }),
+    Sprite ('9', 0x0 + 5 * 9, { 0xF0, 0x90, 0xF0, 0x10, 0xF0 }),
+    Sprite ('A', 0x0 + 5 * 10, { 0xF0, 0x90, 0xF0, 0x90, 0x90 }),
+    Sprite ('B', 0x0 + 5 * 11, { 0xE0, 0x90, 0xE0, 0x90, 0xE0 }),
+    Sprite ('C', 0x0 + 5 * 12, { 0xF0, 0x80, 0x80, 0x80, 0xF0 }),
+    Sprite ('D', 0x0 + 5 * 13, { 0xE0, 0x90, 0x90, 0x90, 0xE0 }),
+    Sprite ('E', 0x0 + 5 * 14, { 0xF0, 0x80, 0xF0, 0x80, 0xF0 }),
+    Sprite ('F', 0x0 + 5 * 15, { 0xF0, 0x80, 0xF0, 0x80, 0x80 })
+  }};
+  /* clang-format on */
 }
