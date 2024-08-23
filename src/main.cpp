@@ -11,7 +11,7 @@
 uint8_t get_byte (std::ifstream &fptr);
 uint16_t get_uint16 (std::ifstream &fptr);
 void handle_set_data_register_to_nn_opcode (CPU &cpu, uint16_t input);
-void handle_set_memory_address_register_opcode (CPU &cpu, uint16_t input);
+void handle_set_address_register_opcode (CPU &cpu, uint16_t input);
 void handle_get_key_opcode (CPU &cpu, uint16_t input);
 void handle_clear_display_opcode (void);
 void handle_sound_timer_opcode (CPU &cpu, uint16_t input);
@@ -49,7 +49,7 @@ main (void)
           handle_set_data_register_to_nn_opcode (cpu, opcode);
           break;
         case 0xA:
-          handle_set_memory_address_register_opcode (cpu, opcode);
+          handle_set_address_register_opcode (cpu, opcode);
           break;
         case 0xF:
           if ((opcode & 0xFF) == 0x0A)
@@ -60,6 +60,10 @@ main (void)
           else if ((opcode & 0xFF) == 0x18)
             {
               handle_sound_timer_opcode (cpu, opcode);
+              break;
+            }
+          else if ((opcode & 0xFF) == 0x29)
+            {
               break;
             }
           [[fallthrough]];
@@ -101,13 +105,11 @@ handle_set_data_register_to_nn_opcode (CPU &cpu, uint16_t input)
 }
 
 void
-handle_set_memory_address_register_opcode (CPU &cpu, uint16_t input)
+handle_set_address_register_opcode (CPU &cpu, uint16_t input)
 {
-  std::cout << std::format ("Before: {:03X}\n",
-                            cpu.get_memory_address_register ());
-  cpu.set_memory_address_register (input & 0xFFF);
-  std::cout << std::format ("After: {:03X}\n",
-                            cpu.get_memory_address_register ());
+  std::cout << std::format ("Before: {:03X}\n", cpu.get_address_register ());
+  cpu.set_address_register (input & 0xFFF);
+  std::cout << std::format ("After: {:03X}\n", cpu.get_address_register ());
 }
 
 void

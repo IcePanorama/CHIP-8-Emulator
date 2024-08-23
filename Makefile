@@ -2,7 +2,7 @@ CC = g++
 
 CSTD = c++20
 
-CFLAGS = -std=$(CSTD) -Wall -Wextra -Wpedantic -Wuninitialized
+CFLAGS = -std=$(CSTD) -Werror -Wall -Wextra -Wpedantic -Wuninitialized
 CFLAGS += -Wmissing-include-dirs -Wshadow -Wundef -Winvalid-pch
 CFLAGS += -Wzero-as-null-pointer-constant -Wctor-dtor-privacy -Wold-style-cast
 CFLAGS += -Woverloaded-virtual

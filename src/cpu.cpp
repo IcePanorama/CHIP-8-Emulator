@@ -46,13 +46,13 @@ CPU::get_data_register (uint8_t x)
 }
 
 void
-CPU::set_memory_address_register (uint16_t addr)
+CPU::set_address_register (uint16_t addr)
 {
-  memory_address_register = addr & 0xFFF;
+  address_register = addr & 0xFFF;
 }
 
 uint16_t
-CPU::get_memory_address_register (void)
+CPU::get_address_register (void)
 {
-  return memory_address_register;
+  return address_register;
 }
