@@ -3,6 +3,7 @@ emulator
 *.rom
 *.json
 .cache/*
+vgcore.*
 
 # Prerequisites
 *.d

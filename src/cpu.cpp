@@ -44,3 +44,9 @@ CPU::get_data_register (uint8_t x)
       throw std::runtime_error ("Invalid register, " + std::to_string (x));
     }
 }
+
+void
+CPU::set_memory_address_register (uint16_t addr)
+{
+  memory_address_register = addr & 0xFFF;
+}

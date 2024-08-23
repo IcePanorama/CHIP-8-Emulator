@@ -8,6 +8,7 @@
 #include <iostream>
 
 uint8_t get_byte (std::ifstream &fptr);
+uint16_t get_uint16 (std::ifstream &fptr);
 
 int
 main (void)
@@ -20,18 +21,17 @@ main (void)
       return -1;
     }
 
-  uint8_t byte_value = get_byte (file);
+  uint16_t opcode = get_uint16 (file);
 
   CPU cpu;
 
-  assert (uint8_t (byte_value / 16) == 6);
+  std::cout << std::format ("Opcode: {:04X}\n", opcode);
+  assert (uint8_t (opcode >> 12) == 6);
 
-  CPU::data_register reg = CPU::get_data_register (byte_value % 16);
+  CPU::data_register reg = CPU::get_data_register ((opcode >> 8) % 0xF);
   std::cout << std::format ("Before: {:02X}\n", cpu.registers[reg]);
 
-  byte_value = get_byte (file);
-  cpu.registers[reg] = byte_value;
-
+  cpu.registers[reg] = opcode & 0xFF;
   std::cout << std::format ("After: {:02X}\n", cpu.registers[reg]);
 
   return 0;
@@ -45,4 +45,12 @@ get_byte (std::ifstream &fptr)
   assert (fptr);
 
   return static_cast<uint8_t> (byte);
+}
+
+uint16_t
+get_uint16 (std::ifstream &fptr)
+{
+  uint8_t low_byte = get_byte (fptr);
+  uint8_t high_byte = get_byte (fptr);
+  return (static_cast<uint16_t> (low_byte) << 8) | high_byte;
 }

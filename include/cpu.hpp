@@ -4,6 +4,8 @@
 #include <cstdint>
 
 class CPU {
+	// 12-bit register, using uint16_t for simplicity.
+	uint16_t memory_address_register = 0;
 public:
 	typedef enum data_register {
 		V0,
@@ -24,10 +26,10 @@ public:
 		VF,	// doubles as carry/no-borrow/other flag
 	} data_register;
 	
-	// 8-bit data registers, V0 to VF.
-	uint8_t registers[16] = {0};
+	uint8_t registers[16] = {0};	// 8-bit data registers, V0 to VF.
 	
 	static data_register get_data_register (uint8_t x);
+	void set_memory_address_register (uint16_t addr);
 };
 
 #endif
