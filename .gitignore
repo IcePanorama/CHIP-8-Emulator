@@ -1,3 +1,9 @@
+# Emulator files
+emulator
+*.rom
+*.json
+.cache/*
+
 # Prerequisites
 *.d
 
