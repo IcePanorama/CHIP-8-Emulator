@@ -21,6 +21,7 @@ void handle_clear_display_opcode (void);
 void handle_sound_timer_opcode (CPU &cpu, uint16_t input);
 void init_global_sprites (void);
 void handle_set_addr_reg_to_loc_of_sprite_opcode (CPU &cpu, uint16_t input);
+void handle_draw_opcode (CPU &cpu, uint16_t input);
 
 int
 main (void)
@@ -59,6 +60,9 @@ main (void)
         case 0xA:
           handle_set_address_register_opcode (cpu, opcode);
           break;
+        case 0xD:
+          handle_draw_opcode (cpu, opcode);
+          break;
         case 0xF:
           if ((opcode & 0xFF) == 0x0A)
             {
@@ -79,6 +83,8 @@ main (void)
         default:
           std::cout << std::format ("Unknown opcode: {:04X}\n", opcode);
         }
+
+      std::cout << std::endl;
     }
 
   return 0;
@@ -212,4 +218,15 @@ handle_set_addr_reg_to_loc_of_sprite_opcode (CPU &cpu, uint16_t input)
   std::cout << std::format ("Before: {:03X}\n", cpu.get_address_register ());
   cpu.set_address_register (sptr->location_in_memory);
   std::cout << std::format ("After: {:03X}\n", cpu.get_address_register ());
+}
+
+void
+handle_draw_opcode (CPU &cpu, uint16_t input)
+{
+  CPU::data_register x_pos_reg = CPU::get_data_register ((input >> 8) & 0xF);
+  CPU::data_register y_pos_reg = CPU::get_data_register ((input >> 4) & 0xF);
+
+  uint8_t x_pos = cpu.registers[x_pos_reg];
+  uint8_t y_pos = cpu.registers[y_pos_reg];
+  std::cout << std::format ("Draw coords: ({:02X},{:02X})\n", x_pos, y_pos);
 }
