@@ -4,7 +4,6 @@
 #include "cpu.hpp"
 #include "sprite.hpp"
 
-#include <fstream>
 #include <stdint.h>
 
 class Emulator

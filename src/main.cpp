@@ -1,10 +1,6 @@
 #include "emulator.hpp"
 #include "utils.hpp"
 
-#include <cassert>
-#include <cstdint>
-#include <cstdio>
-#include <fstream>
 #include <iostream>
 
 int

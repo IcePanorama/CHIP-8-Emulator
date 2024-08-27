@@ -1,5 +1,4 @@
 #include "emulator.hpp"
-#include "utils.hpp"
 
 #include <format>
 #include <iostream>
