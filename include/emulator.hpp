@@ -21,6 +21,7 @@ class Emulator
   void handle_sound_timer_opcode (uint16_t input);
   void handle_set_addr_reg_to_loc_of_sprite_opcode (uint16_t input);
   void handle_draw_opcode (uint16_t input);
+  void handle_goto_opcode (uint16_t input);
 
 public:
   Emulator (void) { init_global_sprites (); }

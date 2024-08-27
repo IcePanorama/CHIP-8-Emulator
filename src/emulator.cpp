@@ -1,5 +1,6 @@
 #include "emulator.hpp"
 
+#include <cstdint>
 #include <format>
 #include <iostream>
 
@@ -143,6 +144,9 @@ Emulator::process_opcode (uint16_t opcode)
           break;
         }
       [[fallthrough]];
+    case 0x1:
+      handle_goto_opcode (opcode);
+      break;
     case 0x6:
       handle_set_data_register_to_nn_opcode (opcode);
       break;
@@ -174,4 +178,12 @@ Emulator::process_opcode (uint16_t opcode)
     }
 
   std::cout << std::endl;
+}
+
+void
+Emulator::handle_goto_opcode (uint16_t input)
+{
+  uint16_t new_addr = input & 0xFFF;
+
+  std::cout << std::format ("Jumping to address {:03X}\n", new_addr);
 }
