@@ -37,5 +37,5 @@ test: $(TARGET)
 
 clean:
 	-@rm vgcore.* 2>/dev/null || true
-	-@rm $(SRC)/*.o 2>/dev/null || true
+	-@rm $(OBJ_FILES) 2>/dev/null || true
 	-@rm $(TARGET) 2>/dev/null || true
