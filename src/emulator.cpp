@@ -6,8 +6,7 @@
 #include <format>
 #include <iostream>
 #include <ostream>
-
-#define NUM_FONT_SPRITES 80
+#include <stdexcept>
 
 /* See: http://devernay.free.fr/hacks/chip8/C8TECH10.HTM#2.4 */
 void
@@ -53,6 +52,15 @@ Emulator::init_font_sprites (void)
   // Trying to avoid using `memcpy` as I know that's the Devil in C++
   for (uint8_t i = 0; i < NUM_FONT_SPRITES; i++)
     memory[i] = fontset[i];
+}
+
+uint16_t
+Emulator::get_font_sprite_mem_loc (uint8_t ch)
+{
+  if (ch > 0xF)
+    throw std::runtime_error (std::format ("Invalid character, %d.\n", ch));
+
+  return ch * FONT_SPRITE_SIZE;
 }
 
 void
@@ -121,28 +129,22 @@ void
 Emulator::handle_set_addr_reg_to_loc_of_sprite_opcode (uint16_t input)
 {
   CPU::DataRegister_t reg = CPU::get_data_register ((input >> 8) & 0xF);
-  std::cout << static_cast<int> (reg) << std::endl;
 
-  /*
-  Sprite *sptr = nullptr;
-  for (uint8_t i = 0; i < global_sprites.size (); i++)
+  uint16_t sprite_loc = 0;
+  try
     {
-      if (global_sprites.at (i).character == cpu.registers[reg])
-        {
-          sptr = &global_sprites.at (i);
-          break;
-        }
+      sprite_loc = get_font_sprite_mem_loc (cpu.registers[reg]);
+    }
+  catch (std::runtime_error const &)
+    {
+      throw std::runtime_error (
+          std::format ("Could not locate font sprite for character, %02X.\n",
+                       cpu.registers[reg]));
     }
 
-  if (sptr == nullptr)
-    throw std::runtime_error (
-        std::format ("Could not locate sprite for character, {:02X}\n",
-                     cpu.registers[reg]));
-
   std::cout << std::format ("Before: {:03X}\n", cpu.get_address_register ());
-  cpu.set_address_register (sptr->location_in_memory);
+  cpu.set_address_register (sprite_loc);
   std::cout << std::format ("After: {:03X}\n", cpu.get_address_register ());
-  */
 }
 
 void

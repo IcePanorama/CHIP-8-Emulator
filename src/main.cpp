@@ -26,7 +26,7 @@ main (void)
 
       std::cout << std::format ("0x{:02X}\n", opcode);
 
-      // emu.process_opcode (opcode);
+      emu.process_opcode (opcode);
     }
 
   std::cout << "Goodbye.\n";
