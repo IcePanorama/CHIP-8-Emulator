@@ -1,6 +1,7 @@
 #include "emulator.hpp"
 #include "utils.hpp"
 
+#include <format>
 #include <iostream>
 
 int
@@ -23,7 +24,9 @@ main (void)
       if (file.eof ())
         break;
 
-      emu.process_opcode (opcode);
+      std::cout << std::format ("0x{:02X}\n", opcode);
+
+      // emu.process_opcode (opcode);
     }
 
   std::cout << "Goodbye.\n";
