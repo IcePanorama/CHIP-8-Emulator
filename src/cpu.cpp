@@ -3,7 +3,7 @@
 #include <stdexcept>
 #include <string>
 
-CPU::data_register
+CPU::DataRegister_t
 CPU::get_data_register (uint8_t x)
 {
   switch (x)

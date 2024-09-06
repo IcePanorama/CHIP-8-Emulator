@@ -35,7 +35,7 @@ Emulator::init_global_sprites (void)
 void
 Emulator::handle_set_data_register_to_nn_opcode (uint16_t input)
 {
-  CPU::data_register reg = CPU::get_data_register ((input >> 8) & 0xF);
+  CPU::DataRegister_t reg = CPU::get_data_register ((input >> 8) & 0xF);
   std::cout << std::format ("Register {} before: {:02X}\n",
                             static_cast<int> (reg), cpu.registers[reg]);
 
@@ -71,7 +71,7 @@ Emulator::handle_get_key_opcode (uint16_t input)
 
   std::cout << std::format ("keycode: {:02X}.\n", keycode);
 
-  CPU::data_register reg = CPU::get_data_register ((input >> 8) & 0xF);
+  CPU::DataRegister_t reg = CPU::get_data_register ((input >> 8) & 0xF);
   std::cout << std::format ("Register {} before: {:02X}\n",
                             static_cast<int> (reg), cpu.registers[reg]);
   cpu.registers[reg] = keycode;
@@ -88,7 +88,7 @@ Emulator::handle_clear_display_opcode (void)
 void
 Emulator::handle_sound_timer_opcode (uint16_t input)
 {
-  CPU::data_register reg = CPU::get_data_register ((input >> 8) & 0xF);
+  CPU::DataRegister_t reg = CPU::get_data_register ((input >> 8) & 0xF);
   std::cout << std::format ("Sound timer before: {:02X}\n", cpu.sound_timer);
   cpu.sound_timer = cpu.registers[reg];
   std::cout << std::format ("Sound timer after: {:02X}\n", cpu.sound_timer);
@@ -97,7 +97,7 @@ Emulator::handle_sound_timer_opcode (uint16_t input)
 void
 Emulator::handle_set_addr_reg_to_loc_of_sprite_opcode (uint16_t input)
 {
-  CPU::data_register reg = CPU::get_data_register ((input >> 8) & 0xF);
+  CPU::DataRegister_t reg = CPU::get_data_register ((input >> 8) & 0xF);
 
   Sprite *sptr = nullptr;
   for (uint8_t i = 0; i < global_sprites.size (); i++)
@@ -122,8 +122,8 @@ Emulator::handle_set_addr_reg_to_loc_of_sprite_opcode (uint16_t input)
 void
 Emulator::handle_draw_opcode (uint16_t input)
 {
-  CPU::data_register x_pos_reg = CPU::get_data_register ((input >> 8) & 0xF);
-  CPU::data_register y_pos_reg = CPU::get_data_register ((input >> 4) & 0xF);
+  CPU::DataRegister_t x_pos_reg = CPU::get_data_register ((input >> 8) & 0xF);
+  CPU::DataRegister_t y_pos_reg = CPU::get_data_register ((input >> 4) & 0xF);
 
   uint8_t x_pos = cpu.registers[x_pos_reg];
   uint8_t y_pos = cpu.registers[y_pos_reg];
