@@ -2,7 +2,6 @@
 #define _EMULATOR_HPP_
 
 #include "cpu.hpp"
-// #include "sprite.hpp"
 
 #include <array>
 #include <cstdint>
@@ -14,20 +13,6 @@
 class Emulator
 {
   CPU cpu;
-  std::array<uint8_t, 4096> memory = { 0 };
-
-  // std::array<Sprite, 16> global_sprites;
-  // bool sprites_initd = false; // may be unnecessary
-
-  /** Specific locations in `memory` that are worth having direct access to. */
-  typedef enum MemoryLocation_e
-  {
-    FONT_MEM_START = 0x0,
-    PROGRAM_MEM_START = 0x200,
-    CALL_STACK_MEM_START = 0xEA0, // Also used for internal use/other vars
-    DISPLAY_MEM_START = 0xF00,
-    END_OF_MEMORY = 0xFFF,
-  } MemoryLocation_t;
 
   /** Copies font sprite data into `memory` at location `FONT_MEM_START`. */
   void init_font_sprites (void);

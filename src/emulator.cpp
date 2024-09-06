@@ -51,7 +51,7 @@ Emulator::init_font_sprites (void)
 
   // Trying to avoid using `memcpy` as I know that's the Devil in C++
   for (uint8_t i = 0; i < NUM_FONT_SPRITES; i++)
-    memory[i] = fontset[i];
+    cpu.memory[i] = fontset[i];
 }
 
 uint16_t
@@ -162,7 +162,7 @@ Emulator::handle_goto_opcode (uint16_t input)
   std::cout << "handle_goto_opcode";
   uint16_t new_addr = input & 0xFFF;
 
-  std::cout << std::format (" - Jumping to address {:03X}\n", new_addr);
+  std::cout << std::format (" - Jumping to address {:03X}", new_addr);
 }
 
 void
