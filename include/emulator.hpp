@@ -38,22 +38,43 @@ class Emulator
    */
   uint16_t get_font_sprite_mem_loc (uint8_t ch);
 
-  // TODO: rename all of these.
-  /** Handle `6XNN` opcode. */
-  void handle_set_data_register_to_nn_opcode (uint16_t input);
-  /** Handle `ANNN` opcode. */
-  void handle_set_address_register_opcode (uint16_t input);
-  /** Handle `FX0A` opcode. */
+  /** Set cpu data register X to NN. Handles 6XNN opcode. */
+  void handle_set_vx_to_nn_opcode (uint16_t input);
+
+  /** Set the 12-bit address register (I) to NNN. Handles ANNN opcode. */
+  void handle_set_i_to_nnn_opcode (uint16_t input);
+
+  /**
+   *  Awaits a key press and then stores that key into cpu data register X.
+   *  Handles FX0A opcode.
+   */
   void handle_get_key_opcode (uint16_t input);
-  /** Handle `00E0` opcode. */
+
+  /** Clears the screen. Handles 00E0 opcode. */
   void handle_clear_display_opcode (void);
-  /** Handle `FX18` opcode. */
-  void handle_sound_timer_opcode (uint16_t input);
-  /** Handle `FX29` opcode. */
-  void handle_set_addr_reg_to_loc_of_sprite_opcode (uint16_t input);
-  /** Handle `DXYN` opcode. */
-  void handle_draw_opcode (uint16_t input);
-  /** Handle `1NNN` opcode. */
+
+  /**
+   *  Sets the sound timer to the value stored in cpu data register X. Handles
+   *  FX18 opcode.
+   */
+  void handle_set_sound_timer_opcode (uint16_t input);
+
+  /**
+   *  Sets the 12-bit address register (I) to the location in memory of the
+   *  font sprite for the character stored in cpu data register X. Handles FX29
+   *  opcode.
+   */
+  void handle_set_i_to_sprite_loc_opcode (uint16_t input);
+
+  /**
+   *  Draws the sprite stored in the location held by the address register to
+   *  a location on screen using the values stored in cpu data register X and Y
+   *  as its X and Y coordinates. Sets cpu data register VF to 1 if any pixel
+   *  is flipped, otherwise it sets it to 0. Handles DXYN opcode.
+   */
+  void handle_draw_sprite_opcode (uint16_t input);
+
+  /** Jumps to address NNN. Handles 1NNN opcode. */
   void handle_goto_opcode (uint16_t input);
 
 public:

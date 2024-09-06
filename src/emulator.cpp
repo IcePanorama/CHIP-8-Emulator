@@ -64,7 +64,7 @@ Emulator::get_font_sprite_mem_loc (uint8_t ch)
 }
 
 void
-Emulator::handle_set_data_register_to_nn_opcode (uint16_t input)
+Emulator::handle_set_vx_to_nn_opcode (uint16_t input)
 {
   CPU::DataRegister_t reg = CPU::get_data_register ((input >> 8) & 0xF);
   std::cout << std::format ("Register {} before: {:02X}\n",
@@ -76,7 +76,7 @@ Emulator::handle_set_data_register_to_nn_opcode (uint16_t input)
 }
 
 void
-Emulator::handle_set_address_register_opcode (uint16_t input)
+Emulator::handle_set_i_to_nnn_opcode (uint16_t input)
 {
   std::cout << std::format ("Before: {:03X}\n", cpu.get_address_register ());
   cpu.set_address_register (input & 0xFFF);
@@ -117,7 +117,7 @@ Emulator::handle_clear_display_opcode (void)
 }
 
 void
-Emulator::handle_sound_timer_opcode (uint16_t input)
+Emulator::handle_set_sound_timer_opcode (uint16_t input)
 {
   CPU::DataRegister_t reg = CPU::get_data_register ((input >> 8) & 0xF);
   std::cout << std::format ("Sound timer before: {:02X}\n", cpu.sound_timer);
@@ -126,7 +126,7 @@ Emulator::handle_sound_timer_opcode (uint16_t input)
 }
 
 void
-Emulator::handle_set_addr_reg_to_loc_of_sprite_opcode (uint16_t input)
+Emulator::handle_set_i_to_sprite_loc_opcode (uint16_t input)
 {
   CPU::DataRegister_t reg = CPU::get_data_register ((input >> 8) & 0xF);
 
@@ -148,7 +148,7 @@ Emulator::handle_set_addr_reg_to_loc_of_sprite_opcode (uint16_t input)
 }
 
 void
-Emulator::handle_draw_opcode (uint16_t input)
+Emulator::handle_draw_sprite_opcode (uint16_t input)
 {
   CPU::DataRegister_t x_pos_reg = CPU::get_data_register ((input >> 8) & 0xF);
   CPU::DataRegister_t y_pos_reg = CPU::get_data_register ((input >> 4) & 0xF);
@@ -176,13 +176,13 @@ Emulator::process_opcode (uint16_t opcode)
       handle_goto_opcode (opcode);
       break;
     case 0x6:
-      handle_set_data_register_to_nn_opcode (opcode);
+      handle_set_vx_to_nn_opcode (opcode);
       break;
     case 0xA:
-      handle_set_address_register_opcode (opcode);
+      handle_set_i_to_nnn_opcode (opcode);
       break;
     case 0xD:
-      handle_draw_opcode (opcode);
+      handle_draw_sprite_opcode (opcode);
       break;
     case 0xF:
       if ((opcode & 0xFF) == 0x0A)
@@ -192,12 +192,12 @@ Emulator::process_opcode (uint16_t opcode)
         }
       else if ((opcode & 0xFF) == 0x18)
         {
-          handle_sound_timer_opcode (opcode);
+          handle_set_sound_timer_opcode (opcode);
           break;
         }
       else if ((opcode & 0xFF) == 0x29)
         {
-          handle_set_addr_reg_to_loc_of_sprite_opcode (opcode);
+          handle_set_i_to_sprite_loc_opcode (opcode);
           break;
         }
       [[fallthrough]];
