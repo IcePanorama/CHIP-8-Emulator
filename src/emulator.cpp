@@ -162,7 +162,7 @@ Emulator::handle_goto_opcode (uint16_t input)
   std::cout << "handle_goto_opcode";
   uint16_t new_addr = input & 0xFFF;
 
-  std::cout << std::format ("Jumping to address {:03X}\n", new_addr);
+  std::cout << std::format (" - Jumping to address {:03X}\n", new_addr);
 }
 
 void
