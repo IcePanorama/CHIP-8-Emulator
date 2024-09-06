@@ -159,10 +159,20 @@ Emulator::handle_draw_sprite_opcode (uint16_t input)
 }
 
 void
+Emulator::handle_goto_opcode (uint16_t input)
+{
+  uint16_t new_addr = input & 0xFFF;
+
+  std::cout << std::format ("Jumping to address {:03X}\n", new_addr);
+}
+
+void
 Emulator::process_opcode (uint16_t opcode)
 {
+  std::cout << cpu << std::endl;
   std::cout << std::format ("Opcode: {:04X}\n", opcode);
 
+  // Primarily worried about the most significant nibble.
   switch (uint8_t (opcode >> 12))
     {
     case 0x0:
@@ -171,6 +181,7 @@ Emulator::process_opcode (uint16_t opcode)
           handle_clear_display_opcode ();
           break;
         }
+
       [[fallthrough]];
     case 0x1:
       handle_goto_opcode (opcode);
@@ -185,33 +196,26 @@ Emulator::process_opcode (uint16_t opcode)
       handle_draw_sprite_opcode (opcode);
       break;
     case 0xF:
-      if ((opcode & 0xFF) == 0x0A)
+      if ((opcode & 0xFF) == 0x0A) // FX0A
         {
           handle_get_key_opcode (opcode);
           break;
         }
-      else if ((opcode & 0xFF) == 0x18)
+      else if ((opcode & 0xFF) == 0x18) // FX18
         {
           handle_set_sound_timer_opcode (opcode);
           break;
         }
-      else if ((opcode & 0xFF) == 0x29)
+      else if ((opcode & 0xFF) == 0x29) // FX29
         {
           handle_set_i_to_sprite_loc_opcode (opcode);
           break;
         }
       [[fallthrough]];
     default:
-      std::cout << std::format ("Unknown opcode: {:04X}\n", opcode);
+      throw std::runtime_error (
+          std::format ("Unknown opcode: {:04X}\n", opcode));
     }
 
   std::cout << std::endl;
-}
-
-void
-Emulator::handle_goto_opcode (uint16_t input)
-{
-  uint16_t new_addr = input & 0xFFF;
-
-  std::cout << std::format ("Jumping to address {:03X}\n", new_addr);
 }

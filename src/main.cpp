@@ -1,7 +1,6 @@
 #include "emulator.hpp"
 #include "utils.hpp"
 
-#include <format>
 #include <iostream>
 
 int
@@ -23,8 +22,6 @@ main (void)
       uint16_t opcode = get_uint16 (file);
       if (file.eof ())
         break;
-
-      std::cout << std::format ("0x{:02X}\n", opcode);
 
       emu.process_opcode (opcode);
     }

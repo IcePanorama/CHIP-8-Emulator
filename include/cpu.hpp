@@ -1,7 +1,9 @@
 #ifndef _CPU_HPP_
 #define _CPU_HPP_
 
+#include <array>
 #include <cstdint>
+#include <ostream>
 
 class CPU
 {
@@ -9,6 +11,9 @@ class CPU
   uint16_t address_register = 0;
 
 public:
+  std::array<uint8_t, 16> registers = { 0 }; // 8-bit data registers, V0 to VF.
+  uint8_t sound_timer = 0;
+
   /* clang-format off */
   typedef enum DataRegister_e
   {
@@ -17,12 +22,12 @@ public:
   } DataRegister_t;
   /* clang-format on */
 
-  uint8_t registers[16] = { 0 }; // 8-bit data registers, V0 to VF.
-
-  uint8_t sound_timer = 0;
   static DataRegister_t get_data_register (uint8_t x);
+
   void set_address_register (uint16_t addr);
-  uint16_t get_address_register (void);
+  uint16_t get_address_register (void) const;
 };
+
+std::ostream &operator<< (std::ostream &os, const CPU &c);
 
 #endif
