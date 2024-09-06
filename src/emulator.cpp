@@ -57,6 +57,8 @@ Emulator::init_font_sprites (void)
 uint16_t
 Emulator::get_font_sprite_mem_loc (uint8_t ch)
 {
+  std::cout << "get_font_sprite_mem_loc";
+
   if (ch > 0xF)
     throw std::runtime_error (std::format ("Invalid character, %d.\n", ch));
 
@@ -66,26 +68,26 @@ Emulator::get_font_sprite_mem_loc (uint8_t ch)
 void
 Emulator::handle_set_vx_to_nn_opcode (uint16_t input)
 {
-  CPU::DataRegister_t reg = CPU::get_data_register ((input >> 8) & 0xF);
-  std::cout << std::format ("Register {} before: {:02X}\n",
-                            static_cast<int> (reg), cpu.registers[reg]);
+  std::cout << "handle_set_vx_to_nn_opcode";
 
+  CPU::DataRegister_t reg = CPU::get_data_register ((input >> 8) & 0xF);
   cpu.registers[reg] = input & 0xFF;
-  std::cout << std::format ("Register {} after: {:02X}\n",
-                            static_cast<int> (reg), cpu.registers[reg]);
 }
 
 void
 Emulator::handle_set_i_to_nnn_opcode (uint16_t input)
 {
-  std::cout << std::format ("Before: {:03X}\n", cpu.get_address_register ());
+  std::cout << "handle_set_i_to_nnn_opcode";
   cpu.set_address_register (input & 0xFFF);
-  std::cout << std::format ("After: {:03X}\n", cpu.get_address_register ());
 }
 
 void
 Emulator::handle_get_key_opcode (uint16_t input)
 {
+  std::cout << "handle_get_key_opcode";
+
+  std::cout << std::endl; // for better readability, may not need this later
+
   // User must currently press enter for keycode to be registered
   // This'll be changed when I switch to using raylib or whatever.
   char c = getchar ();
@@ -100,34 +102,30 @@ Emulator::handle_get_key_opcode (uint16_t input)
   else
     throw std::runtime_error (std::format ("Invalid key, %c.\n", c));
 
-  std::cout << std::format ("keycode: {:02X}.\n", keycode);
-
   CPU::DataRegister_t reg = CPU::get_data_register ((input >> 8) & 0xF);
-  std::cout << std::format ("Register {} before: {:02X}\n",
-                            static_cast<int> (reg), cpu.registers[reg]);
   cpu.registers[reg] = keycode;
-  std::cout << std::format ("Register {} after: {:02X}\n",
-                            static_cast<int> (reg), cpu.registers[reg]);
 }
 
 void
 Emulator::handle_clear_display_opcode (void)
 {
-  std::cout << "Clearing the screen...\n";
+  std::cout << "handle_get_key_opcode";
+  std::cout << " - Clearing the screen...";
 }
 
 void
 Emulator::handle_set_sound_timer_opcode (uint16_t input)
 {
+  std::cout << "handle_set_sound_timer_opcode";
+
   CPU::DataRegister_t reg = CPU::get_data_register ((input >> 8) & 0xF);
-  std::cout << std::format ("Sound timer before: {:02X}\n", cpu.sound_timer);
   cpu.sound_timer = cpu.registers[reg];
-  std::cout << std::format ("Sound timer after: {:02X}\n", cpu.sound_timer);
 }
 
 void
 Emulator::handle_set_i_to_sprite_loc_opcode (uint16_t input)
 {
+  std::cout << "handle_set_i_to_sprite_loc_opcode";
   CPU::DataRegister_t reg = CPU::get_data_register ((input >> 8) & 0xF);
 
   uint16_t sprite_loc = 0;
@@ -142,25 +140,26 @@ Emulator::handle_set_i_to_sprite_loc_opcode (uint16_t input)
                        cpu.registers[reg]));
     }
 
-  std::cout << std::format ("Before: {:03X}\n", cpu.get_address_register ());
   cpu.set_address_register (sprite_loc);
-  std::cout << std::format ("After: {:03X}\n", cpu.get_address_register ());
 }
 
 void
 Emulator::handle_draw_sprite_opcode (uint16_t input)
 {
+  std::cout << "handle_draw_sprite_opcode";
+
   CPU::DataRegister_t x_pos_reg = CPU::get_data_register ((input >> 8) & 0xF);
   CPU::DataRegister_t y_pos_reg = CPU::get_data_register ((input >> 4) & 0xF);
 
   uint8_t x_pos = cpu.registers[x_pos_reg];
   uint8_t y_pos = cpu.registers[y_pos_reg];
-  std::cout << std::format ("Draw coords: ({:02X},{:02X})\n", x_pos, y_pos);
+  std::cout << std::format (" - draw coords: ({:02X},{:02X})", x_pos, y_pos);
 }
 
 void
 Emulator::handle_goto_opcode (uint16_t input)
 {
+  std::cout << "handle_goto_opcode";
   uint16_t new_addr = input & 0xFFF;
 
   std::cout << std::format ("Jumping to address {:03X}\n", new_addr);
@@ -170,7 +169,7 @@ void
 Emulator::process_opcode (uint16_t opcode)
 {
   std::cout << cpu << std::endl;
-  std::cout << std::format ("Opcode: {:04X}\n", opcode);
+  std::cout << std::format ("Opcode: {:04X} - ", opcode);
 
   // Primarily worried about the most significant nibble.
   switch (uint8_t (opcode >> 12))
@@ -217,5 +216,5 @@ Emulator::process_opcode (uint16_t opcode)
           std::format ("Unknown opcode: {:04X}\n", opcode));
     }
 
-  std::cout << std::endl;
+  std::cout << std::endl << std::endl;
 }

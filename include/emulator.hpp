@@ -25,7 +25,8 @@ class Emulator
     FONT_MEM_START = 0x0,
     PROGRAM_MEM_START = 0x200,
     CALL_STACK_MEM_START = 0xEA0, // Also used for internal use/other vars
-    DISPLAY_MEM_START = 0xFFF,
+    DISPLAY_MEM_START = 0xF00,
+    END_OF_MEMORY = 0xFFF,
   } MemoryLocation_t;
 
   /** Copies font sprite data into `memory` at location `FONT_MEM_START`. */
