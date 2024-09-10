@@ -176,6 +176,11 @@ CPU::handle_get_key_opcode (uint16_t input)
 
   // User must currently press enter for keycode to be registered
   // This'll be changed when I switch to using raylib or whatever.
+  /*
+   *  FIXME: this currently causes a runtime exception/memory leak when used in
+   *  a loop. This should be fixed as soon as we switch to using a proper
+   *  library in the future.
+   */
   char c = getchar ();
   uint8_t keycode = 0;
 
