@@ -1,5 +1,6 @@
 #include "cpu.hpp"
 
+#include <cstdio>
 #include <format>
 #include <iostream>
 #include <stdexcept>
@@ -248,4 +249,22 @@ CPU::handle_goto_opcode (uint16_t input)
   uint16_t new_addr = input & 0xFFF;
 
   std::cout << std::format (" - Jumping to address {:03X}", new_addr);
+}
+
+#define BYTES_TO_READ 32
+void
+CPU::inspect_memory (uint16_t start_loc)
+{
+  for (uint16_t i = start_loc; i < start_loc + BYTES_TO_READ; i++)
+    {
+      std::cout << std::format (" {:02X}", memory[i]);
+      uint16_t tmp = i - start_loc;
+      if (tmp != 0)
+        {
+          if ((tmp % 4) == 3)
+            std::cout << "\t";
+          if ((tmp % 16) == 15)
+            std::cout << std::endl;
+        }
+    }
 }

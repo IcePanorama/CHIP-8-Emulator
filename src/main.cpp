@@ -1,3 +1,4 @@
+#include "cpu.hpp"
 #include "emulator.hpp"
 #include "utils.hpp"
 
@@ -27,6 +28,8 @@ main (void)
     {
       exit (EXIT_FAILURE);
     }
+
+  emu.cpu.inspect_memory (CPU::PROGRAM_MEM_START);
 
   std::cout << "Starting emulator...\n";
   /*

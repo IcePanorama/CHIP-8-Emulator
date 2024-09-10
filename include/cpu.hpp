@@ -97,6 +97,12 @@ public:
   /** Jumps to address NNN. Handles 1NNN opcode. */
   void handle_goto_opcode (uint16_t input);
 
+  /**
+   *  Prints `BYTES_TO_READ` many bytes from `memory`, starting from
+   *  `start_loc`.
+   */
+  void inspect_memory (uint16_t start_loc);
+
   CPU (void) { init_font_sprites (); };
 };
 
