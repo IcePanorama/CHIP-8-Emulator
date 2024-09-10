@@ -33,10 +33,11 @@ public:
     PROGRAM_MEM_START = 0x200,
     CALL_STACK_MEM_START = 0xEA0, // Also used for internal use/other vars
     DISPLAY_MEM_START = 0xF00,
-    END_OF_MEMORY = 0xFFF,
+    END_OF_MEMORY = 0x1000,
   } MemoryLocation_t;
 
-  uint16_t program_counter = CALL_STACK_MEM_START;
+  uint16_t program_counter = PROGRAM_MEM_START;
+  uint16_t stack_pointer = CALL_STACK_MEM_START;
 
   /* clang-format off */
   typedef enum DataRegister_e

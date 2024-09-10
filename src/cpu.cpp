@@ -186,7 +186,7 @@ CPU::handle_get_key_opcode (uint16_t input)
   else if (c >= '0' && c <= '9')
     keycode = c - '0';
   else
-    throw std::runtime_error (std::format ("Invalid key, %c.\n", c));
+    throw std::runtime_error (std::format ("Invalid key, {:c}.\n", c));
 
   CPU::DataRegister_t reg = CPU::get_data_register ((input >> 8) & 0xF);
   registers[reg] = keycode;
@@ -195,8 +195,11 @@ CPU::handle_get_key_opcode (uint16_t input)
 void
 CPU::handle_clear_display_opcode (void)
 {
-  std::cout << "handle_get_key_opcode";
-  std::cout << " - Clearing the screen...";
+  std::cout << "handle_clear_display_opcode";
+  for (uint16_t i = CPU::DISPLAY_MEM_START; i < CPU::END_OF_MEMORY; i++)
+    {
+      memory[i] = 0;
+    }
 }
 
 void
@@ -246,9 +249,9 @@ void
 CPU::handle_goto_opcode (uint16_t input)
 {
   std::cout << "handle_goto_opcode";
-  uint16_t new_addr = input & 0xFFF;
+  program_counter = input & 0xFFF;
 
-  std::cout << std::format (" - Jumping to address {:03X}", new_addr);
+  std::cout << std::format (" - Jumping to address {:03X}", program_counter);
 }
 
 #define BYTES_TO_READ 32

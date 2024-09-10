@@ -29,19 +29,11 @@ main (void)
       exit (EXIT_FAILURE);
     }
 
+  // FIXME: move this function to the emulator class, makes more sense imo
   emu.cpu.inspect_memory (CPU::PROGRAM_MEM_START);
 
   std::cout << "Starting emulator...\n";
-  /*
-    while (true)
-      {
-        uint16_t opcode = get_uint16 (file);
-        if (file.eof ())
-          break;
-
-        emu.process_opcode (opcode);
-      }
-  */
+  emu.run ();
 
   std::cout << "Goodbye.\n";
 

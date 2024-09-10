@@ -77,3 +77,19 @@ Emulator::load_program (std::ifstream &p)
 
   std::runtime_error ("Out of memory error.");
 }
+
+void
+Emulator::run (void)
+{
+  // Resetting these to their default values
+  cpu.program_counter = CPU::PROGRAM_MEM_START;
+  cpu.stack_pointer = CPU::CALL_STACK_MEM_START;
+
+  for (; cpu.program_counter < CPU::CALL_STACK_MEM_START;
+       cpu.program_counter += 2)
+    {
+      uint16_t opcode = cpu.memory[cpu.program_counter] << 8;
+      opcode |= cpu.memory[cpu.program_counter + 1];
+      process_opcode (opcode);
+    }
+}
