@@ -93,3 +93,21 @@ Emulator::run (void)
       process_opcode (opcode);
     }
 }
+
+#define BYTES_TO_READ 32
+void
+Emulator::inspect_memory (uint16_t start_loc)
+{
+  for (uint16_t i = start_loc; i < start_loc + BYTES_TO_READ; i++)
+    {
+      std::cout << std::format (" {:02X}", cpu.memory[i]);
+      uint16_t tmp = i - start_loc;
+      if (tmp != 0)
+        {
+          if ((tmp % 4) == 3)
+            std::cout << "\t";
+          if ((tmp % 16) == 15)
+            std::cout << std::endl;
+        }
+    }
+}

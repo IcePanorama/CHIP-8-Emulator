@@ -30,7 +30,7 @@ main (void)
     }
 
   // FIXME: move this function to the emulator class, makes more sense imo
-  emu.cpu.inspect_memory (CPU::PROGRAM_MEM_START);
+  emu.inspect_memory (CPU::PROGRAM_MEM_START);
 
   std::cout << "Starting emulator...\n";
   emu.run ();
