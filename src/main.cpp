@@ -1,7 +1,9 @@
 #include "emulator.hpp"
 #include "utils.hpp"
 
+#include <cstdlib>
 #include <iostream>
+#include <stdexcept>
 
 int
 main (void)
@@ -16,15 +18,27 @@ main (void)
     }
 
   Emulator emu;
-  std::cout << "Starting emulator...\n";
-  while (true)
+  std::cout << "Loading program into memory...\n";
+  try
     {
-      uint16_t opcode = get_uint16 (file);
-      if (file.eof ())
-        break;
-
-      emu.process_opcode (opcode);
+      emu.load_program (file);
     }
+  catch (std::runtime_error &)
+    {
+      exit (EXIT_FAILURE);
+    }
+
+  std::cout << "Starting emulator...\n";
+  /*
+    while (true)
+      {
+        uint16_t opcode = get_uint16 (file);
+        if (file.eof ())
+          break;
+
+        emu.process_opcode (opcode);
+      }
+  */
 
   std::cout << "Goodbye.\n";
 

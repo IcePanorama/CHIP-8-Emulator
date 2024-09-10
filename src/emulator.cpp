@@ -1,4 +1,6 @@
 #include "emulator.hpp"
+#include "cpu.hpp"
+#include "utils.hpp"
 
 #include <cstdint>
 #include <cstring>
@@ -59,4 +61,19 @@ Emulator::process_opcode (uint16_t opcode)
     }
 
   std::cout << std::endl << std::endl;
+}
+
+void
+Emulator::load_program (std::ifstream &p)
+{
+  for (uint16_t i = CPU::PROGRAM_MEM_START; i < CPU::CALL_STACK_MEM_START; i++)
+    {
+      uint8_t opcode = get_uint8 (p);
+      if (p.eof ())
+        return;
+
+      cpu.memory[i] = opcode;
+    }
+
+  std::runtime_error ("Out of memory error.");
 }

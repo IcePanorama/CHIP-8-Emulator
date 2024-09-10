@@ -11,6 +11,7 @@ class Emulator
 
 public:
   Emulator (void) = default;
+  void load_program (std::ifstream &p);
   void process_opcode (uint16_t opcode);
 };
 
