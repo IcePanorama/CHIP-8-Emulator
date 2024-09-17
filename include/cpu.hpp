@@ -96,7 +96,7 @@ public:
   void handle_draw_sprite_opcode (uint16_t input);
 
   /** Jumps to address NNN. Handles 1NNN opcode. */
-  void handle_goto_opcode (uint16_t input);
+  void handle_jump_opcode (uint16_t input);
 
   CPU (void) { init_font_sprites (); };
 };

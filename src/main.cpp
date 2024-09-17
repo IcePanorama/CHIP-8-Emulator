@@ -1,8 +1,8 @@
 #include "cpu.hpp"
 #include "emulator.hpp"
-#include "utils.hpp"
 
 #include <cstdlib>
+#include <fstream>
 #include <iostream>
 #include <stdexcept>
 
@@ -29,7 +29,6 @@ main (void)
       exit (EXIT_FAILURE);
     }
 
-  // FIXME: move this function to the emulator class, makes more sense imo
   emu.inspect_memory (CPU::PROGRAM_MEM_START);
 
   std::cout << "Starting emulator...\n";

@@ -154,7 +154,7 @@ CPU::get_font_sprite_mem_loc (uint8_t ch)
 void
 CPU::handle_set_vx_to_nn_opcode (uint16_t input)
 {
-  std::cout << "handle_set_vx_to_nn_opcode";
+  std::cout << "LD Vx, byte - handle_set_vx_to_nn_opcode";
 
   CPU::DataRegister_t reg = CPU::get_data_register ((input >> 8) & 0xF);
   registers[reg] = input & 0xFF;
@@ -163,14 +163,14 @@ CPU::handle_set_vx_to_nn_opcode (uint16_t input)
 void
 CPU::handle_set_i_to_nnn_opcode (uint16_t input)
 {
-  std::cout << "handle_set_i_to_nnn_opcode";
+  std::cout << "LD I, addr - handle_set_i_to_nnn_opcode";
   set_address_register (input & 0xFFF);
 }
 
 void
 CPU::handle_get_key_opcode (uint16_t input)
 {
-  std::cout << "handle_get_key_opcode";
+  std::cout << "LD Vx, K - handle_get_key_opcode";
 
   std::cout << std::endl; // for better readability, may not need this later
 
@@ -200,7 +200,7 @@ CPU::handle_get_key_opcode (uint16_t input)
 void
 CPU::handle_clear_display_opcode (void)
 {
-  std::cout << "handle_clear_display_opcode";
+  std::cout << "CLS - handle_clear_display_opcode";
   for (uint16_t i = CPU::DISPLAY_MEM_START; i < CPU::END_OF_MEMORY; i++)
     {
       memory[i] = 0;
@@ -210,7 +210,7 @@ CPU::handle_clear_display_opcode (void)
 void
 CPU::handle_set_sound_timer_opcode (uint16_t input)
 {
-  std::cout << "handle_set_sound_timer_opcode";
+  std::cout << "LD ST, Vx - handle_set_sound_timer_opcode";
 
   CPU::DataRegister_t reg = CPU::get_data_register ((input >> 8) & 0xF);
   sound_timer = registers[reg];
@@ -219,7 +219,7 @@ CPU::handle_set_sound_timer_opcode (uint16_t input)
 void
 CPU::handle_set_i_to_sprite_loc_opcode (uint16_t input)
 {
-  std::cout << "handle_set_i_to_sprite_loc_opcode";
+  std::cout << "LD F, Vx - handle_set_i_to_sprite_loc_opcode";
   CPU::DataRegister_t reg = CPU::get_data_register ((input >> 8) & 0xF);
 
   uint16_t sprite_loc = 0;
@@ -240,10 +240,23 @@ CPU::handle_set_i_to_sprite_loc_opcode (uint16_t input)
 void
 CPU::handle_draw_sprite_opcode (uint16_t input)
 {
-  std::cout << "handle_draw_sprite_opcode";
+  std::cout << "DRW Vx, Vy, nibble - handle_draw_sprite_opcode";
 
   CPU::DataRegister_t x_pos_reg = CPU::get_data_register ((input >> 8) & 0xF);
   CPU::DataRegister_t y_pos_reg = CPU::get_data_register ((input >> 4) & 0xF);
+
+  // TODO: actually update vram
+  /*
+   * The interpreter reads n bytes from memory, starting at the address stored
+   * in I. These bytes are then displayed as sprites on screen at coordinates
+   * (Vx, Vy). Sprites are XORed onto the existing screen. If this causes any
+   * pixels to be erased, VF is set to 1, otherwise it is set to 0. If the
+   * sprite is positioned so part of it is outside the coordinates of the
+   * display, it wraps around to the opposite side of the screen. See
+   * instruction 8xy3 for more information on XOR, and section 2.4, Display,
+   * for more information on the Chip-8 screen and sprites.
+   * src: http://devernay.free.fr/hacks/chip8/C8TECH10.HTM#Dxyn
+   */
 
   uint8_t x_pos = registers[x_pos_reg];
   uint8_t y_pos = registers[y_pos_reg];
@@ -251,9 +264,9 @@ CPU::handle_draw_sprite_opcode (uint16_t input)
 }
 
 void
-CPU::handle_goto_opcode (uint16_t input)
+CPU::handle_jump_opcode (uint16_t input)
 {
-  std::cout << "handle_goto_opcode";
+  std::cout << "JP addr - handle_jump_opcode";
   program_counter = input & 0xFFF;
 
   std::cout << std::format (" - Jumping to address {:03X}", program_counter);

@@ -27,7 +27,7 @@ Emulator::process_opcode (uint16_t opcode)
 
       [[fallthrough]];
     case 0x1:
-      cpu.handle_goto_opcode (opcode);
+      cpu.handle_jump_opcode (opcode);
       break;
     case 0x6:
       cpu.handle_set_vx_to_nn_opcode (opcode);
